@@ -1,10 +1,19 @@
 import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
 import { GOOGLE_WEB_CLIENT_ID } from '@env';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import { Theme } from '../styles/theme';
 import { useAuthStore } from '../store/useAuthStore';
 
 export const LoginScreen = () => {
@@ -34,44 +43,111 @@ export const LoginScreen = () => {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         Alert.alert('Cancelled', 'Login Cancelled');
       } else {
-        Alert.alert('Error', 'Cannot connect');
+        Alert.alert('Error', 'Connection failed.');
         console.error(error);
       }
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.logo}>MSBU FE Test</Text>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
 
-      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-        <Text style={styles.buttonText}>Sign in with Google 🇬</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.content}>
+        <View style={styles.headerArea}>
+          <Text style={styles.logo}>MSBU Mobile</Text>
+          <View style={styles.underline} />
+          <Text style={styles.subtitle}>your app fe test app</Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={handleGoogleLogin}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.googleIcon}>G</Text>
+          <Text style={styles.buttonText}>Sign in with Google</Text>
+        </TouchableOpacity>
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Version 1.0.0</Text>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    backgroundColor: Theme.colors.surface,
+  },
+  content: {
+    flex: 1,
+    padding: Theme.spacing.xl,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+  },
+  headerArea: {
+    alignItems: 'center',
+    marginBottom: 60,
   },
   logo: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#000',
+    fontSize: 40,
+    fontWeight: '900',
+    color: Theme.colors.primary,
+    letterSpacing: -1,
   },
-  subtitle: { textAlign: 'center', color: '#666', marginBottom: 50 },
+  underline: {
+    height: 4,
+    width: 40,
+    backgroundColor: Theme.colors.secondary,
+    borderRadius: Theme.radius.round,
+    marginTop: 4,
+  },
+  subtitle: {
+    textAlign: 'center',
+    color: Theme.colors.textLight,
+    marginTop: 15,
+    fontSize: 14,
+    fontWeight: '500',
+  },
   googleButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 16,
-    borderRadius: 12,
+    backgroundColor: Theme.colors.surface,
+    flexDirection: 'row',
+    borderWidth: 1.5,
+    borderColor: Theme.colors.border,
+    padding: Theme.spacing.md,
+    borderRadius: Theme.radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  googleIcon: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Theme.colors.primary,
+    marginRight: 12,
+  },
+  buttonText: {
+    fontWeight: '700',
+    fontSize: 16,
+    color: Theme.colors.text,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 40,
+    left: 0,
+    right: 0,
     alignItems: 'center',
   },
-  buttonText: { fontWeight: 'bold', fontSize: 16 },
+  footerText: {
+    fontSize: 10,
+    color: Theme.colors.textLight,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
 });
